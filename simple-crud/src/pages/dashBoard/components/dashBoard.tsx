@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
 import DynamicTable from "../../../components/dynamicTable/dynamictable";
 import { Mui } from "../../../theme";
-import { UserDeatilForm } from "../../userDetailForm/userdetailform";
-
 
 import { Toast } from "../../../components/toastNotification/toast";
-import type { TableColumn, TableData } from "./dashboardinterface";
+import type { TableColumn, TableData ,ToastData } from "./dashboardinterface";
 import { ApiService } from "../../../services/api/apiService";
+import { UserDeatils } from "../../../components/userDetails/userdetails";
 
 const DashboardMain = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<TableData[]>([]);
-  const [dialogData, setdialogData] = useState({});
-   const [toastData, setToastData] = useState({
+  const [dialogData, setdialogData] = useState<any>({});
+  const [btnType, setbtnType] = useState("");
+  const [toastData, setToastData] = useState<ToastData>({
     show: false,
-    type: 'info',
+    type: "info",
     message: "",
   });
-
 
   useEffect(() => {
     loadData();
@@ -38,15 +37,15 @@ const DashboardMain = () => {
       setUsers(tableData);
       setTimeout(() => {
         handleLoading(false);
-         setToastData((prev) => ({
-        ...prev,
-        show: true,
-        type: "success",
-        message: "success",
-      }));
+        setToastData((prev) => ({
+          ...prev,
+          show: true,
+          type: "success",
+          message: "success",
+        }));
       }, 700);
     } catch (error) {
-       setToastData((prev) => ({
+      setToastData((prev) => ({
         ...prev,
         show: true,
         type: "error",
@@ -55,19 +54,27 @@ const DashboardMain = () => {
       handleLoading(false);
     }
   };
+
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
+    setbtnType("submit");
+    setdialogData({});
   };
 
   const handleCloseDialog = () => {
+    
+    handleLoading(true);
     setIsDialogOpen(false);
-    setdialogData({});
-    loadData();
+    setTimeout(() => {
+      loadData();
+      handleLoading(false);
+    }, 1500);
   };
 
   const handleOpenEditDialog = (data: any) => {
     setdialogData(data);
     setIsDialogOpen(true);
+    setbtnType("update");
   };
 
   const handleLoading = (isLoading: boolean) => {
@@ -83,7 +90,6 @@ const DashboardMain = () => {
       }, 700);
       loadData();
     } catch (error) {
-      console.log(error);
       handleLoading(false);
     }
   };
@@ -92,7 +98,7 @@ const DashboardMain = () => {
     setToastData((prev) => ({ ...prev, show: false }));
   };
 
-  const columns:TableColumn[] = [
+  const columns: TableColumn[] = [
     {
       field: "name",
       headerName: "Name",
@@ -163,31 +169,38 @@ const DashboardMain = () => {
             </Mui.Toolbar>
           </Mui.AppBar>
         </Mui.Box>
-        <DynamicTable
-          columns={columns}
-          data={users}
-          defaultSortField="name"
-          defaultSortDirection="asc"
-          pagination
-          rowsPerPageOptions={[5, 10, 25]}
-          defaultRowsPerPage={5}
-          stickyHeader
-          elevation={3}
+        <Mui.Box>
+          <DynamicTable
+            columns={columns}
+            data={users}
+            defaultSortField="name"
+            defaultSortDirection="asc"
+            pagination
+            rowsPerPageOptions={[5, 10, 25]}
+            defaultRowsPerPage={5}
+            stickyHeader
+            elevation={3}
+          />
+        </Mui.Box>
+      </Mui.Box>
+      <Mui.Box>
+        <UserDeatils
+          open={isDialogOpen}
+          onClose={handleCloseDialog}
+          data={dialogData}
+          btnType={btnType}
         />
       </Mui.Box>
-      <UserDeatilForm
-        open={isDialogOpen}
-        onClose={handleCloseDialog}
-        data={dialogData}
-      />
-      <Mui.Backdrop
-        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-        open={isLoading}
-        onClick={() => handleLoading(false)}
-      >
-        <Mui.CircularProgress color="inherit" />
-      </Mui.Backdrop>
-      <Toast onClose={closeToast} data={toastData} />
+      <Mui.Box>
+        <Mui.Backdrop
+          sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+          open={isLoading}
+          onClick={() => handleLoading(false)}
+        >
+          <Mui.CircularProgress color="inherit" />
+        </Mui.Backdrop>
+        <Toast onClose={closeToast} data={toastData} />
+      </Mui.Box>
     </>
   );
 };

@@ -21,3 +21,8 @@ export interface TableData{
   status: string;
   originalData: User;
 }
+export interface ToastData{
+    show: boolean;
+    type: "error" | "warning" | "info" | "success";
+    message: string;
+ }

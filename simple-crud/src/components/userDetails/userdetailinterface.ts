@@ -1,7 +1,8 @@
 export interface UserDetailFormProps {
   open: boolean;
-  onClose: () => void;
+  onClose: (formdata?:{}) => void;
   data?:UserDetailFormData
+  btnType?: 'submit'|'update' | string
 }
 
 export interface UserDetailFormData {
@@ -11,5 +12,6 @@ export interface UserDetailFormData {
   email: string;
   password: string;
   gender:string,
-  status:String
+  status:string
+  role:string,
 }

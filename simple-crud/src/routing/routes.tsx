@@ -26,4 +26,10 @@ export const routes = [
     private: true,
     allowedRoles: ['admin', 'user'],
   },
+  {
+    path: '/form-hook',
+    page: lazy(() => import('../pages/formHook')),
+    private: true,
+    allowedRoles: ['admin', 'user'],
+  },
 ]

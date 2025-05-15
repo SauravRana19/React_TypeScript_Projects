@@ -6,6 +6,7 @@ import { validateField } from "../../../core/common";
 import "./signin.css";
 import { userRoleContext } from "../../../core/common";
 import { Toast } from "../../../components/toastNotification/toast";
+import { useForm } from "react-hook-form";
 
 const SignInForm = () => {
   const navigate = useNavigate();
@@ -13,36 +14,26 @@ const SignInForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [toastData, setToastData] = useState({
     show: false,
-    type: 'info',
+    type: "info",
     message: "",
   });
 
-  const [formData, setFormData] = useState<SignInFormData>({
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<SignInFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+      mode: "onTouched", 
+      reValidateMode: "onChange",
   });
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    const error = validateField(name, value, formData);
-    setErrors((prev) => ({
-      ...prev,
-      [name]: error,
-    }));
   };
 
   const handleSignUpRedirect = (href: string) => {
@@ -53,15 +44,14 @@ const SignInForm = () => {
     setToastData((prev) => ({ ...prev, show: false }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: SignInFormData) => {
     const storedUser = sessionStorage.getItem("userData");
     if (!storedUser) {
       setToastData((prev) => ({
         ...prev,
         show: true,
         type: "error",
-        msg: "No registered user found. Please sign up first.",
+        message: "No registered user found. Please sign up first.",
       }));
       return;
     }
@@ -69,12 +59,12 @@ const SignInForm = () => {
     try {
       const userData = JSON.parse(storedUser);
       if (
-        userData.email === formData.email &&
-        userData.password === formData.password
+        userData.email === data.email &&
+        userData.password === data.password
       ) {
-        let authToken = btoa(`${userData.email}`) 
-        sessionStorage.setItem('authToken',authToken)
-        if(authToken){
+        let authToken = btoa(`${userData.email}`);
+        sessionStorage.setItem("authToken", authToken);
+        if (authToken) {
           if (role !== "user") {
             handleSignUpRedirect("/dashboard");
           } else {
@@ -82,12 +72,7 @@ const SignInForm = () => {
           }
         }
       } else {
-        setToastData((prev) => ({
-          ...prev,
-          show: true,
-          type: "error",
-          message: "No registered user found. Please sign up first.",
-        }));
+        setError("password", { type: "manual", message: "No registered user found. Please sign up first" });
       }
     } catch (error) {
       console.error("Error parsing user data:", error);
@@ -100,7 +85,7 @@ const SignInForm = () => {
         <Mui.Typography component="h1" variant="h4" align="center" gutterBottom>
           Sign In
         </Mui.Typography>
-        <Mui.Box component="form" onSubmit={handleSubmit}>
+        <Mui.Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Mui.Grid
             container
             direction="column"
@@ -113,29 +98,36 @@ const SignInForm = () => {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
-                autoComplete="email"
-                value={formData.email}
                 error={Boolean(errors.email)}
-                helperText={errors.email}
-                onChange={handleChange}
-                onBlur={handleChange}
+                helperText={errors.email?.message}              
+                 {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                  validate: (value) => validateField("email", value) || true,
+                })}
               />
             </Mui.Grid>
             <Mui.Grid size={{ xs: 12, md: 12 }}>
               <Mui.TextField
                 required
                 fullWidth
-                name="password"
                 label="Password"
                 type={showPassword ? "text" : "password"}
                 id="password"
-                autoComplete="password"
-                value={formData.password}
                 error={Boolean(errors.password)}
-                helperText={errors.password}
-                onChange={handleChange}
-                onBlur={handleChange}
+                helperText={errors.password?.message}
+                 {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  validate: (value) => validateField("password", value) || true,
+                })}
+
                 InputProps={{
                   endAdornment: (
                     <Mui.InputAdornment position="end">

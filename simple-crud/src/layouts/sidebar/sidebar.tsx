@@ -27,10 +27,10 @@ export const Sidebar = () => {
       visible: true
     },
     { 
-      text: "Analytics", 
-      icon: <Mui.AnalyticsOutlinedIcon />,
-      href: "/analytics",
-      visible: role === 'admin'
+      text: "Form Hook", 
+      icon: <Mui.PhishingIcon />,
+      href: "/form-hook",
+      visible: true
     },
     { 
       text: "Notifications", 
