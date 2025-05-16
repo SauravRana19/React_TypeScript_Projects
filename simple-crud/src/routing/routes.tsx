@@ -32,4 +32,10 @@ export const routes = [
     private: true,
     allowedRoles: ['admin', 'user'],
   },
+  {
+  path: '/forbidden',
+  page: lazy(() => import('../pages/errorPage/forbidden')),
+  private: true,
+  allowedRoles: ['admin', 'user'], // or allow all
+  }
 ]
