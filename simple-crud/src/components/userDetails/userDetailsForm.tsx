@@ -38,7 +38,7 @@ export const UserDetailsForm = forwardRef(
       if (formData) {
         reset(formData);
       }
-    }, [formData]);
+    }, [formData, reset]);
 
     useImperativeHandle(ref, () => ({
       submitForm: () => {

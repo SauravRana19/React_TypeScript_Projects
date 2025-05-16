@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Mui } from "../../theme";
 import "./sidebar.css";
 import { userRoleContext } from "../../core/common";
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const Sidebar = () => {
   const navigate = useNavigate();
   const role = useContext(userRoleContext);
+  const [selectedIndex , setSelectedIndex] = useState<number>(0)
     const sidebarItems = [
     { 
       text: "Dashboard", 
@@ -40,19 +41,16 @@ export const Sidebar = () => {
     },
   ];
 
-  const handleNavigate = (href:string) =>{
+  const handleNavigate = (href:string,index:number) =>{
     navigate(href)
+    setSelectedIndex(index)
   }
   
   return (
     <>
-    <Mui.Box 
+    <Mui.Box
     className="sidebar"
-      sx={{
-        bgcolor: 'background.paper',
-        borderRight: '1px solid',
-        borderColor: 'divider',
-      }}
+    bgcolor="background.paper"
     >
       <Mui.List>
         {sidebarItems.map((item, index) => (
@@ -60,20 +58,13 @@ export const Sidebar = () => {
             <div key={index}>
               <Mui.ListItem disablePadding>
                 <Mui.ListItemButton 
-                  sx={{
-                    px: 3,
-                    '&.Mui-selected': {
-                      bgcolor: 'primary.light',
-                      borderRight: '3px solid',
-                      borderColor: 'primary.main'
-                    }
-                  }}
-                  onClick={()=>{handleNavigate(item.href)}}
+                 selected={index == selectedIndex}
+                  onClick={()=>{handleNavigate(item.href, index)}}
                 >
                   <Mui.ListItemIcon sx={{ minWidth: 36,color: 'text.primary'}}>
                     {item.icon}
                   </Mui.ListItemIcon>
-                  <Mui.ListItemText sx={{ color: 'text.primary' }} primary={item.text} />
+                  <Mui.ListItemText sx={{ color: 'text.primary', bgcolor:'text.primaryChannel' }} primary={item.text} />
                 </Mui.ListItemButton>
               </Mui.ListItem>
             </div>
