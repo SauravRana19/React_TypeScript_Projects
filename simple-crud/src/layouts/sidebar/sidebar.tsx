@@ -70,10 +70,10 @@ export const Sidebar = () => {
                   }}
                   onClick={()=>{handleNavigate(item.href)}}
                 >
-                  <Mui.ListItemIcon sx={{ minWidth: 36 }}>
+                  <Mui.ListItemIcon sx={{ minWidth: 36,color: 'text.primary'}}>
                     {item.icon}
                   </Mui.ListItemIcon>
-                  <Mui.ListItemText primary={item.text} />
+                  <Mui.ListItemText sx={{ color: 'text.primary' }} primary={item.text} />
                 </Mui.ListItemButton>
               </Mui.ListItem>
             </div>

@@ -1,18 +1,17 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { SignInFormData } from "./signinInterface";
 import { Mui } from "../../../theme";
 import { validateField } from "../../../core/common";
 import "./signin.css";
-import { userRoleContext } from "../../../core/common";
 import { Toast } from "../../../components/toastNotification/toast";
 import { useForm } from "react-hook-form";
+import type { ToastProps } from "../../../components/toastNotification/toastinterface";
 
 const SignInForm = () => {
   const navigate = useNavigate();
-  const role = useContext(userRoleContext);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [toastData, setToastData] = useState({
+  const [toastData, setToastData] = useState<ToastProps["data"]>({
     show: false,
     type: "info",
     message: "",
@@ -28,8 +27,8 @@ const SignInForm = () => {
       email: "",
       password: "",
     },
-      mode: "onTouched", 
-      reValidateMode: "onChange",
+    mode: "onTouched",
+    reValidateMode: "onChange",
   });
 
   const handleClickShowPassword = () => {
@@ -64,15 +63,16 @@ const SignInForm = () => {
       ) {
         let authToken = btoa(`${userData.email}`);
         sessionStorage.setItem("authToken", authToken);
-        if (authToken) {
-          if (role !== "user") {
-            handleSignUpRedirect("/dashboard");
-          } else {
-            handleSignUpRedirect("/blog");
-          }
+        if (userData.role !== "user") {
+          handleSignUpRedirect("/dashboard");
+        } else {
+          handleSignUpRedirect("/blog");
         }
       } else {
-        setError("password", { type: "manual", message: "No registered user found. Please sign up first" });
+        setError("password", {
+          type: "manual",
+          message: "No registered user found. Please sign up first",
+        });
       }
     } catch (error) {
       console.error("Error parsing user data:", error);
@@ -81,106 +81,123 @@ const SignInForm = () => {
 
   return (
     <>
-      <Mui.Container className="signin-layout" component="main" maxWidth="sm">
-        <Mui.Typography component="h1" variant="h4" align="center" gutterBottom>
-          Sign In
-        </Mui.Typography>
-        <Mui.Box component="form" onSubmit={handleSubmit(onSubmit)}>
-          <Mui.Grid
-            container
-            direction="column"
-            spacing={2}
-            sx={{ justifyContent: "center" }}
+      <Mui.Box
+        className="signin-layout-main"
+      >
+        <Mui.Container
+          sx={{
+            backgroundColor: "background.paper",
+            color: "text.primary",
+          }}
+          className="signin-form"
+          component="main"
+          maxWidth="sm"
+        >
+          <Mui.Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            gutterBottom
           >
-            <Mui.Grid size={{ xs: 12, md: 12 }}>
-              <Mui.TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}              
-                 {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
-                  validate: (value) => validateField("email", value) || true,
-                })}
-              />
-            </Mui.Grid>
-            <Mui.Grid size={{ xs: 12, md: 12 }}>
-              <Mui.TextField
-                required
-                fullWidth
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                id="password"
-                error={Boolean(errors.password)}
-                helperText={errors.password?.message}
-                 {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                  validate: (value) => validateField("password", value) || true,
-                })}
-
-                InputProps={{
-                  endAdornment: (
-                    <Mui.InputAdornment position="end">
-                      <Mui.IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <Mui.VisibilityOffOutlinedIcon />
-                        ) : (
-                          <Mui.VisibilityOutlinedIcon />
-                        )}
-                      </Mui.IconButton>
-                    </Mui.InputAdornment>
-                  ),
-                }}
-              />
-            </Mui.Grid>
-            <Mui.Grid size={{ xs: 12, md: 12 }}>
-              <Mui.Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                size="large"
-              >
-                SIGN IN
-              </Mui.Button>
-            </Mui.Grid>
-            <Mui.Grid size={{ xs: 12, md: 12 }}>
-              <Mui.Typography variant="body2" align="center" sx={{ mt: 2 }}>
-                Don't have an account?{" "}
-                <Mui.Link
-                  component="button"
-                  type="button"
-                  variant="body2"
-                  onClick={() => {
-                    handleSignUpRedirect("/signup");
-                  }}
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": {
-                      color: "primary.main",
+            Sign In
+          </Mui.Typography>
+          <Mui.Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Mui.Grid
+              container
+              direction="column"
+              spacing={2}
+              sx={{ justifyContent: "center" }}
+            >
+              <Mui.Grid size={{ xs: 12, md: 12 }}>
+                <Mui.TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
                     },
+                    validate: (value) => validateField("email", value) || true,
+                  })}
+                />
+              </Mui.Grid>
+              <Mui.Grid size={{ xs: 12, md: 12 }}>
+                <Mui.TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  error={Boolean(errors.password)}
+                  helperText={errors.password?.message}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                    validate: (value) =>
+                      validateField("password", value) || true,
+                  })}
+                  InputProps={{
+                    endAdornment: (
+                      <Mui.InputAdornment position="end">
+                        <Mui.IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <Mui.VisibilityOffOutlinedIcon />
+                          ) : (
+                            <Mui.VisibilityOutlinedIcon />
+                          )}
+                        </Mui.IconButton>
+                      </Mui.InputAdornment>
+                    ),
                   }}
+                />
+              </Mui.Grid>
+              <Mui.Grid size={{ xs: 12, md: 12 }}>
+                <Mui.Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  size="large"
                 >
-                  Sign up
-                </Mui.Link>
-              </Mui.Typography>
+                  SIGN IN
+                </Mui.Button>
+              </Mui.Grid>
+              <Mui.Grid size={{ xs: 12, md: 12 }}>
+                <Mui.Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                  Don't have an account?{" "}
+                  <Mui.Link
+                    component="button"
+                    type="button"
+                    variant="body2"
+                    onClick={() => {
+                      handleSignUpRedirect("/signup");
+                    }}
+                    sx={{
+                      cursor: "pointer",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                  >
+                    Sign up
+                  </Mui.Link>
+                </Mui.Typography>
+              </Mui.Grid>
             </Mui.Grid>
-          </Mui.Grid>
-        </Mui.Box>
-      </Mui.Container>
+          </Mui.Box>
+        </Mui.Container>
+      </Mui.Box>
       <Toast onClose={closeToast} data={toastData} />
     </>
   );

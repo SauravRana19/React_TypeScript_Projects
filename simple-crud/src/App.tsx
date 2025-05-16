@@ -40,12 +40,6 @@ const App = () => {
       </ThemeProvider>
     </>
   );
-
-  // return (
-  //   <>
-  //     <RouterProvider router={router}/>
-  //   </>
-  // )
 };
 
 export default App;

@@ -1,6 +1,16 @@
-.signup-layout{
+.signup-layout-main{
+  background-image: url("../../../assets/signUp.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+}
+.signup-form{
     border: 1px solid gainsboro;
     border-radius: 5px;
     padding: 25px;
     transform: translateY(130px);
+    box-shadow: rgba(0, 0, 0, 1.0) 0px 5px 15px;
 }

@@ -22,7 +22,7 @@ export const UserDetailsDialog = ({
       }
     }
   };
-
+ 
   return (
     <>
       <Mui.Dialog open={open} onClose={onClose} disableEscapeKeyDown>

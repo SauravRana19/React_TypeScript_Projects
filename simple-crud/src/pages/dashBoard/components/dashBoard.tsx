@@ -5,7 +5,7 @@ import { Mui } from "../../../theme";
 import { Toast } from "../../../components/toastNotification/toast";
 import type { TableColumn, TableData ,ToastData } from "./dashboardinterface";
 import { ApiService } from "../../../services/api/apiService";
-import { UserDeatils } from "../../../components/userDetails/userdetails";
+import { UserDetailsDialog } from "../../../components/userDetails/userDetailsDialog";
 
 const DashboardMain = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -184,7 +184,7 @@ const DashboardMain = () => {
         </Mui.Box>
       </Mui.Box>
       <Mui.Box>
-        <UserDeatils
+        <UserDetailsDialog
           open={isDialogOpen}
           onClose={handleCloseDialog}
           data={dialogData}

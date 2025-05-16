@@ -76,6 +76,8 @@ import TextsmsOutlinedIcon from '@mui/icons-material/TextsmsOutlined';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import PhishingIcon from '@mui/icons-material/Phishing';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import BedtimeIcon from '@mui/icons-material/Bedtime';
 
 const Mui={
      TextField,
@@ -152,6 +154,8 @@ const Mui={
      Radio,
      RadioGroup,
      PhishingIcon,
-     Checkbox, 
+     Checkbox,
+     LightModeOutlinedIcon,
+     BedtimeIcon 
 }
 export default Mui

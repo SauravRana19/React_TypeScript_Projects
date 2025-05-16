@@ -1,8 +1,5 @@
-import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { userRoleContext } from "../../../core/common";
-
-
+import { getUserRole } from "../../../core/common";
 interface AuthGuardProps {
   allowedRoles?: string[];
   redirectTo?: string;
@@ -14,8 +11,7 @@ export const AuthGuard = ({
   redirectTo = "/signin",
   children,
 }: AuthGuardProps) => {
-  const role = useContext(userRoleContext);
-
+  const role = getUserRole();
   if (!role) {
     return <Navigate to={redirectTo} replace />;
   }

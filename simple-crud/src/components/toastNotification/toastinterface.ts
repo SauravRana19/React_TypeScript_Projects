@@ -1,5 +1,5 @@
 export interface ToastProps {
-  onClose: () => void;
+  onClose?: () => void;
   data: {
     show:boolean,
     type:"error" | "warning" | "info" | "success";
