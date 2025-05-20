@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import DynamicTable from "../../../components/dynamicTable/dynamictable";
+import DynamicTable from "../../../components/DynamicTable/DynamicTable";
 import { Mui } from "../../../theme";
-
-import { Toast } from "../../../components/toastNotification/toast";
-import type { TableColumn, TableData ,ToastData } from "./dashboardinterface";
+import { Toast } from "../../../components/ToastNotification/Toast";
+import type { TableColumn, TableData, ToastData } from "./dashboardinterface";
 import { ApiService } from "../../../services/api/apiService";
-import { UserDetailsDialog } from "../../../components/userDetails/userDetailsDialog";
+import { UserDetailsDialog } from "../../../components/UserDetails/UserDetailsDialog";
 
 const DashboardMain = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -62,7 +61,6 @@ const DashboardMain = () => {
   };
 
   const handleCloseDialog = () => {
-    
     handleLoading(true);
     setIsDialogOpen(false);
     setTimeout(() => {

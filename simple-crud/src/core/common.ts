@@ -1,4 +1,5 @@
-import { createContext } from 'react';
+import { createSlice } from "@reduxjs/toolkit";
+import type { CommonState } from "./CommonInterface";
 
 export const validateField = (name: any, value: string, formData?: any) => {
   switch (name) {
@@ -37,9 +38,38 @@ export const validateField = (name: any, value: string, formData?: any) => {
   }
 };
 
-export const getUserRole = () => {
-  const userData = sessionStorage.getItem("userData");
-  return userData ? JSON.parse(userData).role : " ";
+const initialState:CommonState = {
+  role: '',
+  authToken: '',
+  isLoader:false
 };
 
-export const userRoleContext = createContext(getUserRole());
+export const commonMethods = createSlice({
+  name: "common",
+  initialState,
+  reducers: {
+    getUserRole: (state) => {
+      const userData = sessionStorage.getItem("userData");
+      state.role = userData ? JSON.parse(userData).role : " ";
+    },
+
+    getAuthToken: (state) => {
+      state.authToken = sessionStorage.getItem("authToken") || "";
+    },
+
+    setAuthToken: (state,action) => {     
+      state.authToken = action.payload.value
+    },
+
+    setUserRole: (state,action) => {
+      state.role =  action.payload.value
+    },
+
+    handleLoading: (state,action) => {
+      state.isLoader = action.payload
+    }
+  },
+});
+
+export const { getUserRole, getAuthToken, setUserRole, setAuthToken, handleLoading} = commonMethods.actions;
+export default commonMethods.reducer;

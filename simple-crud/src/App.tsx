@@ -1,13 +1,14 @@
-// import { RouterProvider } from "react-router-dom";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { routes } from "./routing/routes";
 import MainLayout from "./layouts/index";
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from "@mui/material/styles";
 import { lazy } from "react";
-import { AuthGuard } from "./features/auth/authGuard/authguard";
 import { theme } from "./theme";
-const NotFound = lazy(() => import("./pages/errorPage/404NotFound"));
+import { AuthGuard } from "./features/auth/authGuard/Authguard";
+import { PublicRoute } from "./features/auth/authGuard/PublicRoute";
 
+const NotFound = lazy(() => import("./pages/ErrorPage/404NotFound"));
+const Forbidden = lazy(() => import("./pages/ErrorPage/Forbidden"));
 const App = () => {
   return (
     <>
@@ -28,12 +29,15 @@ const App = () => {
                         </MainLayout>
                       </AuthGuard>
                     ) : (
-                      <route.page />
+                      <PublicRoute>
+                        <route.page />
+                      </PublicRoute>
                     )
                   }
                 />
               );
             })}
+            <Route path="/forbidden" element={<Forbidden />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

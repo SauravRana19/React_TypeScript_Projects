@@ -1,8 +1,8 @@
 import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
 import { Mui } from "../../theme";
 import { useForm, Controller } from "react-hook-form";
+import { validateField } from "../../core/Common";
 import type { UserDetailFormData } from "./userdetailinterface";
-import { validateField } from "../../core/common";
 
 interface PropData {
   screenType?: string;

@@ -9,8 +9,7 @@ export const ReactFormHook = () => {
     reset,
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = () => {
     reset();
   };
 

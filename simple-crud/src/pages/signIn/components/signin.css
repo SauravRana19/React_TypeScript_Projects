@@ -7,11 +7,16 @@
   min-height: 100vh;
   margin: 0;
 }
+
+.signin-pic {
+  background-size: contain !important;
+  height: 300px;
+}
+
 .signin-form {
   border: 1px solid gainsboro;
   border-radius: 5px;
   padding: 25px;
-  width: 30% !important;
-  transform: translateY(130px);
+  transform: translateY(150px);
   box-shadow: rgba(0, 0, 0, 1.0) 0px 5px 15px;
 }

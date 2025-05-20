@@ -55,7 +55,6 @@ const SignIn = () => {
     try {
       const userData = JSON.parse(storedUser);
       if (userData.email === formData.email && userData.password === formData.password) {
-        console.log(role);
         if(role !== 'user'){
           handleSignUpRedirect('/dashboard')
         }else{

@@ -1,8 +1,10 @@
 import React from "react";
 import { Mui } from "../../theme";
 import { useNavigate } from "react-router-dom";
-import { getUserRole } from "../../core/common";
+import { useDispatch, useSelector } from "react-redux";
 import { useColorScheme } from "@mui/material/styles";
+import type { State } from "../../core/CommonInterface";
+import { setAuthToken, setUserRole } from "../../core/Common";
 
 const settings = [
   { text: "Settings", icon: <Mui.SettingsOutlinedIcon />, href: "/*" },
@@ -10,8 +12,9 @@ const settings = [
 ];
 
 export const Header = () => {
+  const dispatch = useDispatch();
   const { mode, setMode } = useColorScheme();
-  const role = getUserRole();
+  const role = useSelector((state: State) => state?.commonMethods?.role);
 
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -26,7 +29,14 @@ export const Header = () => {
     setAnchorElUser(null);
   };
 
+  const removeBrowserSavedData = () =>{
+    sessionStorage.removeItem("authToken");
+    dispatch(setUserRole(''));
+    dispatch(setAuthToken(''))
+  }
+
   const logoutUser = (href: string) => {
+    removeBrowserSavedData()
     navigate(href);
   };
 

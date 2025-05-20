@@ -7,6 +7,11 @@
   min-height: 100vh;
   margin: 0;
 }
+
+.signup-pic{
+  height: 300px;
+}
+
 .signup-form{
     border: 1px solid gainsboro;
     border-radius: 5px;

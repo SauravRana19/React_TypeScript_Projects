@@ -1,4 +1,5 @@
-import DashboardMain from "./components/dashBoard";
+import DashboardMain from "./components/DashBoard";
+
 
  const Dashboard = () => {
   return (

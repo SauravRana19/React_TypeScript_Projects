@@ -10,6 +10,7 @@ import { Mui } from "../../theme";
 import type { SortDirection } from "@mui/material";
 import type { DynamicTableProps } from "./DynamicTableInterface";
 
+
 function TablePaginationActions(props: {
   count: any;
   page: any;

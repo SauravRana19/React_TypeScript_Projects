@@ -22,20 +22,14 @@ export const routes = [
   },
   {
     path: '/blog',
-    page: lazy(() => import('../pages/blog')),
+    page: lazy(() => import('../pages/Blog')),
     private: true,
     allowedRoles: ['admin', 'user'],
   },
   {
     path: '/form-hook',
-    page: lazy(() => import('../pages/formHook')),
+    page: lazy(() => import('../pages/FormHook')),
     private: true,
     allowedRoles: ['admin', 'user'],
   },
-  {
-  path: '/forbidden',
-  page: lazy(() => import('../pages/errorPage/forbidden')),
-  private: true,
-  allowedRoles: ['admin', 'user'], // or allow all
-  }
 ]

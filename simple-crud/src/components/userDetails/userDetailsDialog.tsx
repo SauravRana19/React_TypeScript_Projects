@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { Mui } from "../../theme";
-import type { UserDetailFormProps } from "./userdetailinterface";
-import { UserDetailsForm } from "./userDetailsForm";
 import { ApiService } from "../../services/api/apiService";
+import type { UserDetailFormProps } from "./userdetailinterface";
+import { UserDetailsForm } from "./UserDetailsForm";
 
 export const UserDetailsDialog = ({
   open,

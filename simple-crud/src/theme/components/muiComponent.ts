@@ -53,6 +53,9 @@ import {
      Radio,
      RadioGroup,
      Checkbox,
+     ImageList,
+     ImageListItem,
+     CardMedia,
     } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -156,6 +159,9 @@ const Mui={
      PhishingIcon,
      Checkbox,
      LightModeOutlinedIcon,
-     BedtimeIcon 
+     BedtimeIcon,
+     ImageList,
+     ImageListItem,
+     CardMedia 
 }
 export default Mui

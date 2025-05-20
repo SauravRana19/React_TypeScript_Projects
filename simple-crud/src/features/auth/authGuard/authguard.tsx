@@ -1,5 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { getUserRole } from "../../../core/common";
+import { useDispatch, useSelector } from "react-redux";
+import type { State } from "../../../core/CommonInterface";
+import { getUserRole } from "../../../core/Common";
+
 interface AuthGuardProps {
   allowedRoles?: string[];
   redirectTo?: string;
@@ -11,10 +14,15 @@ export const AuthGuard = ({
   redirectTo = "/signin",
   children,
 }: AuthGuardProps) => {
-  const role = getUserRole();
+  const dispatch = useDispatch();
+  dispatch(getUserRole())
+  const role = useSelector((state: State) => state?.commonMethods?.role);
+  
   if (!role) return <Navigate to={redirectTo} replace />;
 
-  if (allowedRoles.length === 0 || allowedRoles.includes(role)) return <>{children}</>
-  
+  if (allowedRoles.includes(role))
+    return <>{children}</>;
+
   return <Navigate to="/forbidden" replace />;
 };
+

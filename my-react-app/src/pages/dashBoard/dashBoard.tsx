@@ -25,7 +25,6 @@ const Dashboard = () => {
         status: user.status,
         originalData: user,
       }));
-      console.log(tableData);
 
       setUsers(tableData);
       setTimeout(() => {

@@ -1,4 +1,4 @@
-import { ReactFormHook } from "../../components/reactFormHook/ReactFormHook"
+import { ReactFormHook } from "../../components/ReactFormHook/ReactFormHook"
 
 const MainFormHook = () =>{
     return (
