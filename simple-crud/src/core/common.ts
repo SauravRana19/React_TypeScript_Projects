@@ -38,10 +38,15 @@ export const validateField = (name: any, value: string, formData?: any) => {
   }
 };
 
-const initialState:CommonState = {
-  role: '',
-  authToken: '',
-  isLoader:false
+const initialState: CommonState = {
+  role: "",
+  authToken: "",
+  isLoader: false,
+  tableData: [],
+  userDialogData: {},
+  btnType: "",
+  isDialog: false,
+  toastData:{}
 };
 
 export const commonMethods = createSlice({
@@ -57,19 +62,51 @@ export const commonMethods = createSlice({
       state.authToken = sessionStorage.getItem("authToken") || "";
     },
 
-    setAuthToken: (state,action) => {     
-      state.authToken = action.payload.value
+    setAuthToken: (state, action) => {
+      state.authToken = action.payload.value;
     },
 
-    setUserRole: (state,action) => {
-      state.role =  action.payload.value
+    setUserRole: (state, action) => {
+      state.role = action.payload.value;
     },
 
-    handleLoading: (state,action) => {
-      state.isLoader = action.payload
-    }
+    setTableData: (state, action) => {
+      state.tableData = action.payload;
+    },
+
+    setUserDialogData: (state, action) => {
+      state.userDialogData = action.payload;
+    },
+
+    setBtnType: (state, action) => {
+      state.btnType = action.payload;
+    },
+
+    setIsDialog: (state, action) => {
+      state.isDialog = action.payload;
+    },
+
+    setToastData:(state,action)=>{
+      state.toastData = action.payload
+    },
+
+    handleLoading: (state, action) => {
+      state.isLoader = action.payload;
+    },
   },
 });
 
-export const { getUserRole, getAuthToken, setUserRole, setAuthToken, handleLoading} = commonMethods.actions;
+export const {
+  getUserRole,
+  getAuthToken,
+  handleLoading,
+  setUserDialogData,
+  setUserRole,
+  setAuthToken,
+  setTableData,
+  setBtnType,
+  setIsDialog,
+  setToastData,
+} = commonMethods.actions;
+
 export default commonMethods.reducer;

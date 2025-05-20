@@ -1,8 +1,10 @@
+import type { ToastData } from "../../core/CommonInterface";
+
 export interface ToastProps {
   onClose?: () => void;
-  data: {
-    show:boolean,
-    type:"error" | "warning" | "info" | "success";
-    message:string
-  }; 
+  data: ToastData | {} |{
+  show: boolean;
+  type: "error" | "warning" | "info" | "success";
+  message: string;
+}
 }

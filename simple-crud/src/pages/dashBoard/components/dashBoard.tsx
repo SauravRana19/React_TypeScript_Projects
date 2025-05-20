@@ -1,100 +1,41 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import DynamicTable from "../../../components/DynamicTable/DynamicTable";
 import { Mui } from "../../../theme";
 import { Toast } from "../../../components/ToastNotification/Toast";
-import type { TableColumn, TableData, ToastData } from "./dashboardinterface";
+import type { TableColumn } from "./dashboardinterface";
 import { ApiService } from "../../../services/api/apiService";
 import { UserDetailsDialog } from "../../../components/UserDetails/UserDetailsDialog";
+import { useDispatch, useSelector } from "react-redux";
+import type { State, TableData, ToastData } from "../../../core/CommonInterface";
+import {
+  handleLoading,
+  setBtnType,
+  setIsDialog,
+  setTableData,
+  setToastData,
+  setUserDialogData,
+} from "../../../core/Common";
+import type { UserDetailFormData } from "../../../components/UserDetails/userdetailinterface";
 
 const DashboardMain = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [users, setUsers] = useState<TableData[]>([]);
-  const [dialogData, setdialogData] = useState<any>({});
-  const [btnType, setbtnType] = useState("");
-  const [toastData, setToastData] = useState<ToastData>({
-    show: false,
-    type: "info",
-    message: "",
-  });
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      handleLoading(true);
-      const data = await ApiService.fetchUserDetails();
-      const tableData: TableData[] = data.map((user: any) => ({
-        id: user.id,
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        status: user.status,
-        originalData: user,
-      }));
-      setUsers(tableData);
-      setTimeout(() => {
-        handleLoading(false);
-        setToastData((prev) => ({
-          ...prev,
-          show: true,
-          type: "success",
-          message: "success",
-        }));
-      }, 700);
-    } catch (error) {
-      setToastData((prev) => ({
-        ...prev,
-        show: true,
-        type: "error",
-        message: "!Error",
-      }));
-      handleLoading(false);
-    }
-  };
-
-  const handleOpenDialog = () => {
-    setIsDialogOpen(true);
-    setbtnType("submit");
-    setdialogData({});
-  };
-
-  const handleCloseDialog = () => {
-    handleLoading(true);
-    setIsDialogOpen(false);
-    setTimeout(() => {
-      loadData();
-      handleLoading(false);
-    }, 1500);
-  };
-
-  const handleOpenEditDialog = (data: any) => {
-    setdialogData(data);
-    setIsDialogOpen(true);
-    setbtnType("update");
-  };
-
-  const handleLoading = (isLoading: boolean) => {
-    setIsLoading(isLoading);
-  };
-
-  const deleteUser = async (id: number) => {
-    try {
-      handleLoading(true);
-      await ApiService.deleteUser(id);
-      setTimeout(() => {
-        handleLoading(false);
-      }, 700);
-      loadData();
-    } catch (error) {
-      handleLoading(false);
-    }
-  };
-
-  const closeToast = () => {
-    setToastData((prev) => ({ ...prev, show: false }));
-  };
+  const isDialog = useSelector(
+    (state: State) => state?.commonMethods?.isDialog
+  );
+  const isLoading = useSelector(
+    (state: State) => state?.commonMethods?.isLoader
+  );
+  const tableData = useSelector(
+    (state: State) => state?.commonMethods?.tableData
+  );
+  const userDialogData = useSelector(
+    (state: State) => state?.commonMethods?.userDialogData
+  );
+  const btnType = useSelector(
+    (state: State) => state?.commonMethods?.btnType
+  );
+  const toastData = useSelector(
+    (state: State) => state?.commonMethods?.toastData
+  );
 
   const columns: TableColumn[] = [
     {
@@ -128,7 +69,7 @@ const DashboardMain = () => {
             variant="contained"
             color="warning"
             startIcon={<Mui.EditIcon />}
-            onClick={() => handleOpenEditDialog(row.originalData)}
+            onClick={() => handleDialog(row.originalData)}
             sx={{ margin: "0 5px" }}
           >
             Edit
@@ -147,6 +88,82 @@ const DashboardMain = () => {
     },
   ];
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const dispatch = useDispatch();
+
+  const loadData = async () => {
+    try {
+      dispatch(handleLoading(true));
+      const response = await ApiService.fetchUserDetails();
+      const data: TableData[] = response.map((user: any) => ({
+        id: user.id,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        status: user.status,
+        originalData: user,
+      }));
+      dispatch(setTableData(data));
+      handleToast({
+        show: true,
+        type: "success",
+        message: "success",
+      });
+    } catch (error) {
+      handleToast({
+        show: true,
+        type: "error",
+        message: "!Error",
+      });
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
+  const handleToast = (data: ToastData) => {
+    dispatch(
+      setToastData({
+        show: data.show,
+        type: data.type,
+        message: data.message,
+      })
+    );
+  };
+
+  const handleDialog = (data: UserDetailFormData | {}) => {
+    dispatch(setUserDialogData(data));
+    dispatch(setIsDialog(true));
+    dispatch(setBtnType(Object.keys(data).length ? "update" : "submit"));
+  };
+
+  const handleCloseDialog = () => {
+    dispatch(handleLoading(true));
+    dispatch(setIsDialog(false));
+    setTimeout(() => {
+      loadData();
+      dispatch(handleLoading(false));
+    }, 1500);
+  };
+
+  const deleteUser = async (id: number) => {
+    try {
+      dispatch(handleLoading(true));
+      await ApiService.deleteUser(id);
+      loadData();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
+
+  const closeToast = () => {
+    dispatch(setToastData({ show: false }));
+  };
+
+
   return (
     <>
       <Mui.Box component="main" sx={{ margin: "2%" }}>
@@ -160,7 +177,9 @@ const DashboardMain = () => {
                 variant="contained"
                 startIcon={<Mui.AddIcon />}
                 color="success"
-                onClick={handleOpenDialog}
+                onClick={() => {
+                  handleDialog({});
+                }}
               >
                 Add User
               </Mui.Button>
@@ -170,7 +189,7 @@ const DashboardMain = () => {
         <Mui.Box>
           <DynamicTable
             columns={columns}
-            data={users}
+            data={Array.isArray(tableData) ? tableData : []}
             defaultSortField="name"
             defaultSortDirection="asc"
             pagination
@@ -183,21 +202,21 @@ const DashboardMain = () => {
       </Mui.Box>
       <Mui.Box>
         <UserDetailsDialog
-          open={isDialogOpen}
+          open={isDialog || false}
           onClose={handleCloseDialog}
-          data={dialogData}
+          data={userDialogData || {}}
           btnType={btnType}
         />
       </Mui.Box>
       <Mui.Box>
         <Mui.Backdrop
           sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-          open={isLoading}
-          onClick={() => handleLoading(false)}
+          open={isLoading || false}
+          onClick={() => dispatch(handleLoading(false))}
         >
           <Mui.CircularProgress color="inherit" />
         </Mui.Backdrop>
-        <Toast onClose={closeToast} data={toastData} />
+        <Toast onClose={closeToast} data={toastData || {}} />
       </Mui.Box>
     </>
   );

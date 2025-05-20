@@ -6,7 +6,7 @@ import type { UserDetailFormData } from "./userdetailinterface";
 
 interface PropData {
   screenType?: string;
-  formData?: UserDetailFormData;
+  formData?: UserDetailFormData | {};
 }
 
 export const UserDetailsForm = forwardRef(

@@ -1,3 +1,5 @@
+import type { TableData } from "../../core/CommonInterface";
+
 export interface Column {
   field: string;
   headerName: string;
@@ -8,7 +10,7 @@ export interface Column {
 
 export interface DynamicTableProps {
   columns: Column[];
-  data: any[];
+  data: TableData[];
   title?: string;
   defaultSortField: string;
   defaultSortDirection?: 'asc' | 'desc';
