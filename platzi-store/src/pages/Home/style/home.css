@@ -1,0 +1,12 @@
+.home-layout {
+  background-image: url("/src/assets/images/homebg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: calc(97vh - 103px) !important;
+  margin: 0;
+  min-width: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

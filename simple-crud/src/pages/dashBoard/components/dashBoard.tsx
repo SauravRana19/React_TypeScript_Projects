@@ -123,13 +123,7 @@ const DashboardMain = () => {
   };
 
   const handleToast = (data: ToastData) => {
-    dispatch(
-      setToastData({
-        show: data.show,
-        type: data.type,
-        message: data.message,
-      })
-    );
+    dispatch(setToastData(data));
   };
 
   const handleDialog = (data: UserDetailFormData | {}) => {
@@ -138,13 +132,13 @@ const DashboardMain = () => {
     dispatch(setBtnType(Object.keys(data).length ? "update" : "submit"));
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = (isTrue?:boolean) => {
     dispatch(handleLoading(true));
     dispatch(setIsDialog(false));
-    setTimeout(() => {
+    if(isTrue){
       loadData();
-      dispatch(handleLoading(false));
-    }, 1500);
+    }
+    dispatch(handleLoading(false));
   };
 
   const deleteUser = async (id: number) => {
@@ -203,7 +197,7 @@ const DashboardMain = () => {
       <Mui.Box>
         <UserDetailsDialog
           open={isDialog || false}
-          onClose={handleCloseDialog}
+          onClose={()=>{handleCloseDialog()}}
           data={userDialogData || {}}
           btnType={btnType}
         />

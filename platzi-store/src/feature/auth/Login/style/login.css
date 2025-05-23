@@ -1,0 +1,22 @@
+.login-layout-main {
+  background-image: url("/src/assets/images/loginbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.login-pic {
+  background-size: contain !important;
+  height: 300px;
+}
+
+.login-form {
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+  padding: 25px;
+  transform: translateY(150px);
+  box-shadow: rgba(0, 0, 0, 1.0) 0px 5px 15px;
+}

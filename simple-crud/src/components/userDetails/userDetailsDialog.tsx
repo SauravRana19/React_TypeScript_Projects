@@ -10,6 +10,7 @@ export const UserDetailsDialog = ({
   data,
   btnType,
 }: UserDetailFormProps) => {
+
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async () => {
@@ -18,20 +19,20 @@ export const UserDetailsDialog = ({
       if (isValid) {
         const formData = formRef.current.getFormValues();
         btnType === 'submit' ?  ApiService.createNewUser(formData) : ApiService.updateUser(data?.id, formData);
-        onClose()
+        onClose(true)
       }
     }
   };
  
   return (
     <>
-      <Mui.Dialog open={open} onClose={onClose} disableEscapeKeyDown>
+      <Mui.Dialog open={open} onClose={()=>{onClose(false)}} disableEscapeKeyDown>
         <Mui.DialogTitle id="user-dialog-title">
           {"User Profile Detail's"}
         </Mui.DialogTitle>
         <Mui.IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={()=>{onClose(false)}}
           sx={(theme) => ({
             position: "absolute",
             right: 8,
@@ -45,7 +46,7 @@ export const UserDetailsDialog = ({
           <UserDetailsForm ref={formRef} formData={data} screenType="userForm" />
         </Mui.DialogContent>
         <Mui.DialogActions>
-          <Mui.Button onClick={onClose}>Cancel</Mui.Button>
+          <Mui.Button onClick={()=>{onClose(false)}}>Cancel</Mui.Button>
           <Mui.Button onClick={handleSubmit}>{btnType}</Mui.Button>
         </Mui.DialogActions>
       </Mui.Dialog>

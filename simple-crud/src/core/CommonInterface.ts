@@ -36,3 +36,8 @@ export interface CommonState {
 export interface State {
   commonMethods: CommonState;
 }
+
+export interface LoginForm {
+  email: string;
+  password: string;
+}
