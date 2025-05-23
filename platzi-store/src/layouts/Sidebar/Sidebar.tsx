@@ -31,7 +31,7 @@ export const Sidebar = () => {
       visible: true,
     },
     {
-      text: "User Management",
+      text: "Users",
       icon: <Mui.PeopleOutlineOutlinedIcon />,
       href: "/users",
       visible: true,

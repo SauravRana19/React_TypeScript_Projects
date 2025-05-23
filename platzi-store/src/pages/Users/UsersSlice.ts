@@ -5,7 +5,6 @@ import type { UsersState } from "../../common/CommonInterface";
 const initialState:UsersState = {
     usersData:[],
     userUpdateData:{},
-    btnType:''
 };
 
 export const users = createSlice({
@@ -21,12 +20,9 @@ export const users = createSlice({
         state.userUpdateData =action.payload
     },
 
-    setBtnType:(state,action)=>{
-      state.btnType = action.payload
-    }
   },
 });
 
-export const { setUsersData, setUserUpdateData, setBtnType} = users.actions;
+export const { setUsersData, setUserUpdateData } = users.actions;
 
 export default users.reducer;

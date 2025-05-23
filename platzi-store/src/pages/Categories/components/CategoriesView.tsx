@@ -4,12 +4,20 @@ import { Toast } from "../../../components/ToastNotification/Toast";
 import Mui from "../../../theme/components/MuiComponent";
 import { useDispatch, useSelector } from "react-redux";
 import type { State, ToastData } from "../../../common/CommonInterface";
-import { handleLoading, setToastData } from "../../../common/CommonSlice";
+import {
+  handleLoading,
+  setBtnType,
+  setToastData,
+} from "../../../common/CommonSlice";
 import moment from "moment";
 import { setIsDrawer } from "../../Products/ProductSlice";
-import { categoriesDetail, deleteCategorie } from "../service/CategoriesService";
-import { setCategorieData } from "../CategoriesSlice";
-
+import {
+  categoriesDetail,
+  deleteCategorie,
+  getCategorieById,
+} from "../service/CategoriesService";
+import { setCategorieData, setCategorieUpdateData } from "../CategoriesSlice";
+import { CategoriesDrawer } from "./CategoriesDrawer";
 
 export interface TableColumn {
   field: string;
@@ -29,35 +37,26 @@ export const CategoriesView = () => {
   const toastData = useSelector(
     (state: State) => state?.commonMethods?.toastData
   );
-const categoriesData = useSelector((state: State) => state?.categories?.categoriesData ?? []);
+  const categoriesData = useSelector(
+    (state: State) => state?.categories?.categoriesData
+  );
 
   useEffect(() => {
     categorieData();
   }, []);
 
   const categorieData = async () => {
-  try {
-    dispatch(handleLoading(true));
-    const response = await categoriesDetail();
-    
-    // Sanitize the data before storing
-    const sanitizedData = response.map(item => ({
-      id: item.id,
-      name: item.name,
-      slug: item.slug,
-      image: item.image,  // Make sure this is a string URL, not an <img> element
-      creationAt: item.creationAt
-      // Only include plain data properties
-    }));
-    
-    dispatch(setCategorieData(sanitizedData));
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    dispatch(setCategorieData([]));
-  } finally {
-    dispatch(handleLoading(false));
-  }
-};
+    try {
+      dispatch(handleLoading(true));
+      const response = await categoriesDetail();
+      dispatch(setCategorieData(response));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      dispatch(setCategorieData([]));
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  };
 
   const handleToast = (data: ToastData) => {
     dispatch(setToastData(data));
@@ -66,34 +65,33 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
     handleToast({
       show: false,
       type: "error",
-      message: "No registered user found.",
+      message: "No registered Categorie found.",
     });
   };
 
-  const removeUser = async (id: number) => {
+  const removeCategorie = async (id: number) => {
     try {
       await deleteCategorie(id);
       categorieData();
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
-  const addUser = () => {
-     dispatch(setIsDrawer(true));
-    //  dispatch(setUserUpdateData({}));
-    //  dispatch(setBtnType('submit'))
+  const addCategorie = () => {
+    dispatch(setIsDrawer(true));
+    dispatch(setCategorieUpdateData({}));
+    dispatch(setBtnType("submit"));
   };
 
-  const editUser = async (id: number) => {
+  const editCategorie = async (id: number) => {
     try {
-
-      // const response = await getUserById(id);
-      // dispatch(setUserUpdateData(response));
-      // dispatch(setBtnType('update'))
-      // dispatch(setIsDrawer(true));
+      const response = await getCategorieById(id);
+      dispatch(setCategorieUpdateData(response));
+      dispatch(setBtnType("update"));
+      dispatch(setIsDrawer(true));
     } catch (error) {
-        console.log(error);
+      console.log(error);
     } finally {
     }
   };
@@ -120,7 +118,14 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
       sortable: true,
       renderCell: (value: any) => (
         <>
-          <p> {moment(value).format("YYYY-MM-DD HH:mm:ss A")}</p>
+          <Mui.Card elevation={0} sx={{ width: 50, height: 50 }}>
+            <Mui.CardMedia
+              component="img"
+              image={value}
+              title="image"
+              sx={{ objectFit: "cover" }}
+            />
+          </Mui.Card>
         </>
       ),
     },
@@ -145,7 +150,7 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
             variant="contained"
             color="warning"
             startIcon={<Mui.EditIcon />}
-            onClick={() => editUser(row.id)}
+            onClick={() => editCategorie(row.id)}
             sx={{ margin: "0 5px" }}
           >
             Edit
@@ -155,7 +160,7 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
             variant="contained"
             color="error"
             startIcon={<Mui.DeleteIcon />}
-            onClick={() => removeUser(row.id)}
+            onClick={() => removeCategorie(row.id)}
           >
             Delete
           </Mui.Button>
@@ -170,17 +175,17 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
           <Mui.AppBar position="static">
             <Mui.Toolbar>
               <Mui.Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                User Management
+                Categorie Management
               </Mui.Typography>
               <Mui.Button
                 variant="contained"
                 startIcon={<Mui.AddIcon />}
                 color="success"
                 onClick={() => {
-                  addUser();
+                  addCategorie();
                 }}
               >
-                Add User
+                Add Categorie
               </Mui.Button>
             </Mui.Toolbar>
           </Mui.AppBar>
@@ -188,7 +193,7 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
         <Mui.Box>
           <DynamicTable
             columns={columns}
-             data={Array.isArray(categoriesData) ? categoriesData : []}
+            data={Array.isArray(categoriesData) ? categoriesData : []}
             defaultSortField="name"
             defaultSortDirection="asc"
             pagination
@@ -200,8 +205,8 @@ const categoriesData = useSelector((state: State) => state?.categories?.categori
         </Mui.Box>
       </Mui.Box>
       <Mui.Box>
-        {/* <UserDetailDrawer /> */}
-      </Mui.Box>
+        <CategoriesDrawer />
+        </Mui.Box>
       <Mui.Box>
         <Mui.Backdrop
           sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}

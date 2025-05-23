@@ -87,7 +87,7 @@ export const Card: React.FC<CardProps> = ({
 
           {price && (
             <Mui.Typography variant="h6" color="primary">
-              ${price.toFixed(2)}
+              Price: ${price.toFixed(2)}
             </Mui.Typography>
           )}
         </Mui.CardContent>

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { State } from "../../../common/CommonInterface";
 import Mui from "../../../theme/components/MuiComponent";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { UserData } from "./UsersInterface";
 import { setShowPassword } from "../../../common/CommonSlice";
@@ -19,9 +19,7 @@ export const UserDetailForm = forwardRef<UserDetailFormHandle>((props, ref) => {
     (state: State) => state?.commonMethods?.showPassword
   );
 
-  const userData = useSelector(
-    (state: State) => state?.users.userUpdateData
-  );
+  const userData = useSelector((state: State) => state?.users.userUpdateData);
 
   const {
     register,
@@ -71,7 +69,7 @@ export const UserDetailForm = forwardRef<UserDetailFormHandle>((props, ref) => {
             <Mui.Grid size={{ xs: 12 }}>
               <Mui.Box display="flex" justifyContent="center" mb={2}>
                 <Mui.Avatar
-                  src={getValues("avatar") || "https://picsum.photos/800"}
+                  src={getValues("avatar")}
                   sx={{ width: 100, height: 100 }}
                 />
               </Mui.Box>

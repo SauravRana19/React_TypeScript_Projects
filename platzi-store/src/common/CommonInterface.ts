@@ -29,10 +29,10 @@ export interface ProductState {
 export interface UsersState {
   usersData:[],
   userUpdateData:{}
-  btnType:string
 }
 export interface CategoriesState {
- categoriesData:any
+ categoriesData:[]
+ categorieUpdateData:{}
 }
 
 

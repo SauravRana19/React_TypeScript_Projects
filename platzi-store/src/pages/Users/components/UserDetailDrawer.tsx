@@ -12,7 +12,7 @@ export const UserDetailDrawer = () => {
   const dispatch = useDispatch();
   const formRef = useRef<UserDetailFormHandle>(null);
   const isDrawer = useSelector((state: State) => state?.products?.isDrawer);
-  const btnType = useSelector((state: State) => state?.users.btnType);
+  const btnType = useSelector((state: State) => state?.commonMethods.btnType);
   const updateUserData = useSelector((state: State) => state?.users.userUpdateData);
   
   const toggleDrawer = (isTrue: boolean) => {
